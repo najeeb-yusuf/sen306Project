@@ -203,7 +203,16 @@ public class studentRecord {
         return course;
     }
 
+    public static void createObjects(){
+        /* Because there could be data in our database that our program is yet to initialize, we need to be able to create \
+        the necessary objects and make the relationships based on the data in the database as soon as our program is run.
+        
+        I am thinking about using a constructor for this but I do not know how that would work. To use the program you have to
+        create a studentRecord object?
+        
+        Once you create the object it does all the necessary object creatings and relationship enforcements */
 
+    }
     public static void assignStudent(String studentId, String courseTitle){
         try {
             FileWriter myWriter = new FileWriter("relationships.txt", true);
@@ -242,7 +251,7 @@ public class studentRecord {
         *
         *
         *
-        * incomplete
+        * Not working please do not run to avoid stories that touch
         *
         *
         *
@@ -250,21 +259,38 @@ public class studentRecord {
         try {
             File myFile = new File("relationships.txt");
             Scanner myReader = new Scanner(myFile);
+            FileWriter myWriter = new FileWriter(myFile, true);
+
             //both student and course have to exist
             if (findStudent(studentId) == null || findCourse(courseTitle ) == null){
                 System.out.println("Please check your parameters");
             }else{
                 Course course = findCourse(courseTitle);
                 Student student = findStudent(studentId);
+                // remove the course from the student object
+                // this automatically removes the course from the student object and also removes the student from the course object
                 course.removeStudent(student);
+                //generate the string equivalent to what is in my database
                 String databaseEntry = studentId + ',' + courseTitle;
                 while (myReader.hasNextLine()){
                     String data = myReader.nextLine();
-                    if (data.equals(databaseEntry)){
-                        myReader.;
+                    if (!(data.equals(databaseEntry))){
+                        // if the string does not my database entry, create a new file relationships.txt and append th
+                        myWriter.write(data);
+                    }else{
+                        //otherwise replace the data in thesame relationships.txt file
+                        // this seems highly inefficient because it is, i can instead write an empty string to the document when I find it.
+                        // I tried looking for ways to do this but they also use thesame method
+                        continue;
                     }
                 }
+            System.out.print(student.getName());
+            System.out.print(" has been removed from ");
+            System.out.print(course.getCourseTitle());
+
             }
+            myReader.close();
+            myWriter.close();
         } catch (IOException e) {
             java.lang.System.out.println("An error occurred.");
             e.printStackTrace();
@@ -272,6 +298,6 @@ public class studentRecord {
     }
 
     public static void main(String[] args) {
-
+        removeStudent("21912", "SEN 306");
     }
 }
