@@ -11,8 +11,8 @@ import java.util.Scanner; // Import the Scanner class to read text files
  object, and I could've just used a delimiter. Nonetheless, it works.
 */
 public class studentRecord {
-    public static ArrayList<Student> students = new ArrayList<Student>();
-    public static ArrayList<Course> courses = new ArrayList<Course>();
+    public static ArrayList<Student> students = new ArrayList<>();
+    public static ArrayList<Course> courses = new ArrayList<>();
     public studentRecord() {
 
         // create all the student objects
@@ -75,6 +75,9 @@ public class studentRecord {
                 Student studentInstance = new Student(name, age,gender,id);
                 students.add(studentInstance);
             }
+            for (Student s : students){
+                System.out.println(s.getIdno());
+            }
             myReader.close();
         } catch (FileNotFoundException e) {
             java.lang.System.out.println("An error occurred.");
@@ -113,10 +116,11 @@ public class studentRecord {
                                 indexRelationship = i;
                             }
                         }
-                        if (relationship.substring(indexRelationship+1) == data.substring(0,index)){
-                            courseInstance.addStudent( findStudent(data.substring(0,indexRelationship)));}
+                        // review this
+                        if (relationship.substring(indexRelationship + 1).equals(data.substring(0, index))){
+                            System.out.println("Code reaches here");
+                            courseInstance.addStudent( findStudent(relationship.substring(0,indexRelationship)));}
                     }
-                    courseReader.close();
                 }catch (FileNotFoundException e) {
                     java.lang.System.out.println("An error occurred with 'relationship.txt' ");
                     e.printStackTrace();
@@ -127,6 +131,10 @@ public class studentRecord {
         }catch (FileNotFoundException e) {
             java.lang.System.out.println("An error occurred with 'courses.txt'");
             e.printStackTrace();
+        }
+        for (Course c: courses){
+            System.out.println(c.getCourseName());
+            System.out.println(c.students);
         }
     }
     public void newStudent(Student student){
