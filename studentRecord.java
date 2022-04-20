@@ -8,106 +8,14 @@ import java.util.Scanner; // Import the Scanner class to read text files
 
 /*
  after I finished writing the nonsense code for file management, I read the documentation for the scanner
- object and I could've just used a delimiter. Nonetheless, it works.
+ object, and I could've just used a delimiter. Nonetheless, it works.
 */
 public class studentRecord {
+    public static ArrayList<Student> students = new ArrayList<Student>();
+    public static ArrayList<Course> courses = new ArrayList<Course>();
+    public studentRecord() {
 
-    public static void newStudent(Student student){
-        try {
-            FileWriter myWriter = new FileWriter("students.txt", true);
-
-            // write all the details to the database 'students.txt'
-            myWriter.write(student.getName());
-            myWriter.write(',');
-            myWriter.write(Integer.toString(student.getAge()));
-            myWriter.write(',');
-            myWriter.write(student.getGender());
-            myWriter.write(',');
-            myWriter.write(student.getIdno());
-            myWriter.write('\n');
-
-            myWriter.close();
-            java.lang.System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            java.lang.System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-    public static void newCourse(Course course){
-        try {
-            FileWriter myWriter = new FileWriter("courses.txt", true);
-
-            // write all the details to the database 'courses.txt'
-            myWriter.write(course.getCourseTitle());
-            myWriter.write(',');;
-            myWriter.write(course.getCourseName());
-            myWriter.write('\n');
-
-            myWriter.close();
-            java.lang.System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            java.lang.System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
-    public static ArrayList<Course> getCourses(){
-        ArrayList<Course> courses = new ArrayList<>();
-        try {
-            //This function goes through the database and parses the string into a Student Object
-            File myObj = new File("courses.txt");
-            Scanner myReader = new Scanner(myObj);
-            // go through each line in our students file
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                int index = 0;
-                //instantiate all the variables we need to construct our student class
-                String name = null; int age = 0; String gender = null; String id = null;
-                // loop through each character until the last one
-                for (int i = 0; i < data.length(); i++){
-                    if (data.charAt(i) == ','){
-                        index = i;
-                    }
-                }
-                courses.add(new Course(data.substring(0,index), data.substring(index+1)));
-        }
-            myReader.close();
-        }catch (FileNotFoundException e) {
-            java.lang.System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        return courses;
-    }
-    public static ArrayList<Course> getRelationships(){
-        ArrayList<Course> relationships = new ArrayList<>();
-        try {
-            //This function goes through the database and parses the string into a Student Object
-            File myObj = new File("relationships.txt");
-            Scanner myReader = new Scanner(myObj);
-            // go through each line in our students file
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                int index = 0;
-                //instantiate all the variables we need to construct our student class
-                String name = null; int age = 0; String gender = null; String id = null;
-                // loop through each character until the last one
-                for (int i = 0; i < data.length(); i++){
-                    if (data.charAt(i) == ','){
-                        index = i;
-                    }
-                }
-                relationships.add(new Course(data.substring(0,index), data.substring(index+1)));
-        }
-            myReader.close();
-        }catch (FileNotFoundException e) {
-            java.lang.System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        return relationships;
-    }
-    public static ArrayList<Student> getStudents(){
-        ArrayList<Student> students = new ArrayList<>();
-
+        // create all the student objects
         try {
             //This function goes through the database and parses the string into a Student Object
             File myObj = new File("students.txt");
@@ -126,7 +34,7 @@ public class studentRecord {
                     // when i reach the end add the value of property to id
                     if (i == data.length() - 1){
                         // I am hard coding at this point, if I restructure my code this will look better
-                        // I do not feel like rewriting this as working with files in java is time consuming
+                        // I do not feel like rewriting this as working with files in java is time-consuming
                         // It feels like i am remaking the wheel
                         // I miss python
 
@@ -172,13 +80,97 @@ public class studentRecord {
             java.lang.System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        return students;
-    }
 
+        // get the courses from the database
+        try {
+            //This function goes through the database and parses the string into a Course Object
+            File courseFile = new File("courses.txt");
+            Scanner courseReader = new Scanner(courseFile);
+            // go through each line in our course file
+            while (courseReader.hasNextLine()) {
+                String data = courseReader.nextLine();
+                int index = 0;
+                //instantiate all the variables we need to construct our student class
+                // loop through each character until the last one
+                for (int i = 0; i < data.length(); i++){
+                    if (data.charAt(i) == ','){
+                        index = i;
+                    }
+                }
+                Course courseInstance = new Course(data.substring(0,index), data.substring(index+1));
+                // add all the students in the class
+                try {
+                    //This function goes through the database and parses the string into a Student Object
+                    File relationshipsFile = new File("relationships.txt");
+                    Scanner relationshipsReader = new Scanner(relationshipsFile);
+                    // go through each line in our students file
+                    while (relationshipsReader.hasNextLine()) {
+                        String relationship = relationshipsReader.nextLine();
+                        int indexRelationship = 0;
+                        // loop through each character until the last one
+                        for (int i = 0; i < relationship.length(); i++) {
+                            if (relationship.charAt(i) == ',') {
+                                indexRelationship = i;
+                            }
+                        }
+                        if (relationship.substring(indexRelationship+1) == data.substring(0,index)){
+                            courseInstance.addStudent( findStudent(data.substring(0,indexRelationship)));}
+                    }
+                    courseReader.close();
+                }catch (FileNotFoundException e) {
+                    java.lang.System.out.println("An error occurred with 'relationship.txt' ");
+                    e.printStackTrace();
+                }
+                courses.add(courseInstance);
+            }
+            courseReader.close();
+        }catch (FileNotFoundException e) {
+            java.lang.System.out.println("An error occurred with 'courses.txt'");
+            e.printStackTrace();
+        }
+    }
+    public void newStudent(Student student){
+        try {
+            FileWriter myWriter = new FileWriter("students.txt", true);
+
+            // write all the details to the database 'students.txt'
+            myWriter.write(student.getName());
+            myWriter.write(',');
+            myWriter.write(Integer.toString(student.getAge()));
+            myWriter.write(',');
+            myWriter.write(student.getGender());
+            myWriter.write(',');
+            myWriter.write(student.getIdno());
+            myWriter.write('\n');
+
+            myWriter.close();
+            java.lang.System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            java.lang.System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+    public void newCourse(Course course){
+        try {
+            FileWriter myWriter = new FileWriter("courses.txt", true);
+
+            // write all the details to the database 'courses.txt'
+            myWriter.write(course.getCourseTitle());
+            myWriter.write(',');
+            myWriter.write(course.getCourseName());
+            myWriter.write('\n');
+
+            myWriter.close();
+            java.lang.System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            java.lang.System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 
     public static Student findStudent(String studentId){
         Student student = null;
-        for (Student s : getStudents()){
+        for (Student s : students){
             if (s.getIdno().equals(studentId)) {
                 student = s;
             }
@@ -191,7 +183,7 @@ public class studentRecord {
     }
     public static Course findCourse(String courseTitle){
         Course course = null;
-        for (Course c : getCourses()){
+        for (Course c : courses){
             if (c.getCourseTitle().equals(courseTitle)) {
                 course = c;
             }
@@ -297,7 +289,22 @@ public class studentRecord {
         }
     }
 
+
+    public void printSummary(){
+        System.out.println("Total number of students: " + students.size());
+        for (Course i : courses){
+            System.out.println("Course:" + i.getCourseName());
+            System.out.println("Enrolled students:" + i.students.size());
+
+
+        }
+
+
+    }
+
     public static void main(String[] args) {
-        removeStudent("21912", "SEN 306");
+        //removeStudent("21912", "SEN 306");
+        studentRecord system = new studentRecord();
+        system.printSummary();
     }
 }

@@ -9,6 +9,5 @@ public class Main {
         //newCourse(c1);
         //newCourse(c2);
         // getStudents();
-        studentRecord.getCourses();
     }
 }

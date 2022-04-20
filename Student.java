@@ -1,4 +1,7 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
 
 public class Student{
     public ArrayList<String> classes;
@@ -12,8 +15,7 @@ public class Student{
         age = a;
         gender = g;
         this.idno = idno;
-        classes = new ArrayList<String>();
-    }
+        classes = new ArrayList<String>();}
 
     public String getIdno() {
         return idno;
