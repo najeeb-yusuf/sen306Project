@@ -1,0 +1,2 @@
+SEN 306,Object Oriented Design and Analysis
+SEN 301,Introduction to Software Engineering

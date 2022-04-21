@@ -6,12 +6,16 @@ import java.util.ArrayList;
 public class Student{
     public ArrayList<String> classes;
     private String idno;
-    private String name;
+    private String fname;
+
+    private String lname;
+
     private int age;
     private String gender;
 
-    public Student(String n, int a, String g, String idno) {
-        name = n;
+    public Student(String fn, String ln, int a, String g, String idno) {
+        fname = fn;
+        lname = ln;
         age = a;
         gender = g;
         this.idno = idno;
@@ -36,12 +40,20 @@ public class Student{
         course.students.remove(idno);
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return fname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getLastname() {
+        return lname;
+    }
+
+    public void setFirstName(String fname) {
+        this.fname = fname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
     }
 
     public int getAge() {

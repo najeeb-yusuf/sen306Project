@@ -28,7 +28,7 @@ public class studentRecord {
                 //this will count how many variables we have stored currently
                 int counter = 0;
                 //instantiate all the variables we need to construct our student class
-                String name = null; int age = 0; String gender = null; String id = null;
+                String fname = null;String lname = null; int age = 0; String gender = null; String id = null;
                 // loop through each character until the last one
                 for (int i = 0; i < data.length(); i++){
                     // when i reach the end add the value of property to id
@@ -49,16 +49,21 @@ public class studentRecord {
                         // the last case is covered in the if statement above
                         switch (counter) {
                             case 0 -> {
-                                name = property;
+                                fname = property;
                                 property = "";
                                 counter += 1;
                             }
                             case 1 -> {
-                                age = Integer.parseInt(property.stripLeading());
+                                lname = property;
                                 property = "";
                                 counter += 1;
                             }
                             case 2 -> {
+                                age = Integer.parseInt(property.stripLeading());
+                                property = "";
+                                counter += 1;
+                            }
+                            case 3 -> {
                                 gender = property;
                                 property = "";
                                 counter += 1;
@@ -72,11 +77,8 @@ public class studentRecord {
                     }
 
                 }
-                Student studentInstance = new Student(name, age,gender,id);
+                Student studentInstance = new Student(fname,lname, age,gender,id);
                 students.add(studentInstance);
-            }
-            for (Student s : students){
-                System.out.println(s.getIdno());
             }
             myReader.close();
         } catch (FileNotFoundException e) {
@@ -118,7 +120,6 @@ public class studentRecord {
                         }
                         // review this
                         if (relationship.substring(indexRelationship + 1).equals(data.substring(0, index))){
-                            System.out.println("Code reaches here");
                             courseInstance.addStudent( findStudent(relationship.substring(0,indexRelationship)));}
                     }
                 }catch (FileNotFoundException e) {
@@ -132,17 +133,16 @@ public class studentRecord {
             java.lang.System.out.println("An error occurred with 'courses.txt'");
             e.printStackTrace();
         }
-        for (Course c: courses){
-            System.out.println(c.getCourseName());
-            System.out.println(c.students);
-        }
+
     }
     public void newStudent(Student student){
         try {
             FileWriter myWriter = new FileWriter("students.txt", true);
 
             // write all the details to the database 'students.txt'
-            myWriter.write(student.getName());
+            myWriter.write(student.getFirstName());
+            myWriter.write(',');
+            myWriter.write(student.getLastname());
             myWriter.write(',');
             myWriter.write(Integer.toString(student.getAge()));
             myWriter.write(',');
@@ -202,18 +202,7 @@ public class studentRecord {
             System.out.print(" not found");}
         return course;
     }
-
-    public static void createObjects(){
-        /* Because there could be data in our database that our program is yet to initialize, we need to be able to create \
-        the necessary objects and make the relationships based on the data in the database as soon as our program is run.
-        
-        I am thinking about using a constructor for this but I do not know how that would work. To use the program you have to
-        create a studentRecord object?
-        
-        Once you create the object it does all the necessary object creatings and relationship enforcements */
-
-    }
-    public static void assignStudent(String studentId, String courseTitle){
+    public void assignStudent(String studentId, String courseTitle){
         try {
             FileWriter myWriter = new FileWriter("relationships.txt", true);
 
@@ -284,7 +273,7 @@ public class studentRecord {
                         continue;
                     }
                 }
-            System.out.print(student.getName());
+            System.out.print(student.getFirstName());
             System.out.print(" has been removed from ");
             System.out.print(course.getCourseTitle());
 
@@ -310,9 +299,4 @@ public class studentRecord {
 
     }
 
-    public static void main(String[] args) {
-        //removeStudent("21912", "SEN 306");
-        studentRecord system = new studentRecord();
-        system.printSummary();
-    }
 }

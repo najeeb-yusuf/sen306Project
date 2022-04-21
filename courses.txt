@@ -1,2 +1,5 @@
 SEN 306,Object Oriented Design and Analysis
 SEN 301,Introduction to Software Engineering
+GEN 102,Nigerian Peoples and Cultures
+ICP 101,Introduction to Politics
+MAT 312,Linear Algebra
